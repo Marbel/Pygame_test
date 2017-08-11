@@ -1,8 +1,8 @@
 import pygame
 
+
 # check collision with treasure
 def checkCollision(x,y,treasureX,treasureY):
-    global screen,textWin
     collisionState = False
     if y >= treasureY and y <= treasureY +40:
         if x >= treasureX and x <= treasureX+35:
@@ -43,8 +43,9 @@ x = 450-35/2
 y = 650
 #load image
 playerImage = pygame.image.load("player.png")
-playerImage = pygame.transform.scale(playerImage,(35,45))
+playerImage = pygame.transform.scale(playerImage,(35,40))
 playerImage = playerImage.convert_alpha()
+
 backgroundImage = pygame.image.load("background.png")
 backgroundImage = pygame.transform.scale(backgroundImage,(900,700))
 screen.blit(backgroundImage,(0,0))
@@ -53,11 +54,18 @@ treasureImage = pygame.image.load("treasure.png")
 treasureImage = pygame.transform.scale(treasureImage,(35,40))
 treasureImage = treasureImage.convert_alpha()
 
+enemyImage = pygame.image.load("enemy.png")
+enemyImage = pygame.transform.scale(enemyImage,(35,40))
+enemyImage = enemyImage.convert_alpha()
+
+enemyX = 50
+enemyY = 450
+
 treasureX = 450-35/2
 treasureY = 50
 
-font = pygame.font.SysFont("comicsans",60)
-textWin = font.render("Great Job!",True,(0,0,0))
+font = pygame.font.SysFont("comicsans",70)
+level = 1
 
 
 frame = pygame.time.Clock()
@@ -72,10 +80,18 @@ while finished == False:
     screen.blit(backgroundImage,(0,0))
     screen.blit(treasureImage,(treasureX,treasureY))
     screen.blit(playerImage,(x,y))
+    screen.blit(enemyImage,(enemyX,enemyY))
     if playerMoved:
         collisionTreasure = checkCollision(x,y,treasureX,treasureY)
     if collisionTreasure:
+        level += 1
+        textWin = font.render("You reached Level " + str(level),True,(0,0,0))
         screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
+        pygame.display.flip()
+        frame.tick(1)
+        x = 450-35/2
+        y = 650
+        collisionTreasure = False
     #pygame.draw.rect(screen,color,rectOne)
     pygame.display.flip()
     frame.tick(60)
