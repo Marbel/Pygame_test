@@ -1,24 +1,39 @@
 import pygame
 
-
+# check collision with treasure
 def checkCollision(x,y,treasureX,treasureY):
     global screen,textWin
     collisionState = False
     if y >= treasureY and y <= treasureY +40:
         if x >= treasureX and x <= treasureX+35:
-            screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
             collisionState = True
         elif x + 35 >= treasureX and x + 35 <= treasureX +35:
-            screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
             collisionState = True
     elif y + 40 >= treasureY and y + 40 <= treasureY + 40:
         if x >= treasureX and x <= treasureX+35:
-            screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
             collisionState = True
         elif x + 35 >= treasureX and x + 35 <= treasureX +35:
-            screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
             collisionState = True
-    return collisionState, y
+    return collisionState
+# move player
+def movePlayer(x,y):
+    playerMoved = False
+    pressedKeys = pygame.key.get_pressed()
+    # Moving player
+    if pressedKeys[pygame.K_LEFT] == True:
+        playerMoved = True
+        x -= 2
+    if pressedKeys[pygame.K_RIGHT] == True:
+        playerMoved = True
+        x += 2
+    if pressedKeys[pygame.K_UP] == True:
+        playerMoved = True
+        y -= 2
+    if pressedKeys[pygame.K_DOWN] == True:
+        playerMoved = True
+        y += 2
+    return x,y,playerMoved
+
 pygame.init()
 screen = pygame.display.set_mode((900,700))
 
@@ -48,28 +63,19 @@ textWin = font.render("Great Job!",True,(0,0,0))
 frame = pygame.time.Clock()
 collisionTreasure = False
 while finished == False:
-    
-    pressedKeys = pygame.key.get_pressed()
+    x, y, playerMoved = movePlayer(x,y)
 
-    # Moving player
-    if pressedKeys[pygame.K_LEFT] == True:
-        x -= 2
-    if pressedKeys[pygame.K_RIGHT] == True:
-        x += 2
-    if pressedKeys[pygame.K_UP] == True:
-        y -= 2
-    if pressedKeys[pygame.K_DOWN] == True:
-        y += 2
 
-    collisionTreasure,y = checkCollision(x,y,treasureX,treasureY)
-    
     #R,G,B
     #color = (0,0,255) #Blue
     #black = (0,0,0)
     screen.blit(backgroundImage,(0,0))
     screen.blit(treasureImage,(treasureX,treasureY))
     screen.blit(playerImage,(x,y))
-    
+    if playerMoved:
+        collisionTreasure = checkCollision(x,y,treasureX,treasureY)
+    if collisionTreasure:
+        screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
     #pygame.draw.rect(screen,color,rectOne)
     pygame.display.flip()
     frame.tick(60)
