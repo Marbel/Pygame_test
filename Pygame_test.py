@@ -59,7 +59,8 @@ enemyImage = pygame.transform.scale(enemyImage,(35,40))
 enemyImage = enemyImage.convert_alpha()
 
 enemyX = 50
-enemyY = 450
+enemyY = 440
+enemymovingright = True
 
 treasureX = 450-35/2
 treasureY = 50
@@ -73,6 +74,14 @@ collisionTreasure = False
 while finished == False:
     x, y, playerMoved = movePlayer(x,y)
 
+    if enemyX < 800 and enemymovingright == True:
+        enemyX += 2 + (level*2)
+    elif enemyX >= 800 and enemymovingright == True:
+        enemymovingright = False
+    if enemyX > 100 and enemymovingright == False:
+        enemyX -= 2 + (level*2)
+    elif enemyX <= 100 and enemymovingright == False:
+        enemymovingright = True
 
     #R,G,B
     #color = (0,0,255) #Blue
