@@ -2,17 +2,17 @@ import pygame
 
 
 # check collision with treasure
-def checkCollision(x,y,treasureX,treasureY):
+def checkCollision(x,y,targetX,targetY):
     collisionState = False
-    if y >= treasureY and y <= treasureY +40:
-        if x >= treasureX and x <= treasureX+35:
+    if y >= targetY and y <= targetY +40:
+        if x >= targetX and x <= targetX+35:
             collisionState = True
-        elif x + 35 >= treasureX and x + 35 <= treasureX +35:
+        elif x + 35 >= targetX and x + 35 <= targetX +35:
             collisionState = True
-    elif y + 40 >= treasureY and y + 40 <= treasureY + 40:
-        if x >= treasureX and x <= treasureX+35:
+    elif y + 40 >= targetY and y + 40 <= targetY + 40:
+        if x >= targetX and x <= targetX+35:
             collisionState = True
-        elif x + 35 >= treasureX and x + 35 <= treasureX +35:
+        elif x + 35 >= targetX and x + 35 <= targetX +35:
             collisionState = True
     return collisionState
 # move player
@@ -71,6 +71,7 @@ level = 1
 
 frame = pygame.time.Clock()
 collisionTreasure = False
+collisionEnemy = False
 while finished == False:
     x, y, playerMoved = movePlayer(x,y)
 
@@ -90,6 +91,7 @@ while finished == False:
     screen.blit(treasureImage,(treasureX,treasureY))
     screen.blit(playerImage,(x,y))
     screen.blit(enemyImage,(enemyX,enemyY))
+    collisionEnemy = checkCollision(x,y,enemyX,enemyY)
     if playerMoved:
         collisionTreasure = checkCollision(x,y,treasureX,treasureY)
     if collisionTreasure:
@@ -101,6 +103,16 @@ while finished == False:
         x = 450-35/2
         y = 650
         collisionTreasure = False
+    elif collisionEnemy:
+        textWin = font.render("You lost",True,(0,0,0))
+        screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
+        pygame.display.flip()
+        frame.tick(1)
+        level = 1
+        x = 450-35/2
+        y = 650
+        collisionEnemy = False
+
     #pygame.draw.rect(screen,color,rectOne)
     pygame.display.flip()
     frame.tick(60)
