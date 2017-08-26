@@ -1,5 +1,5 @@
 import pygame
-
+import random
 
 # check collision with treasure
 def checkCollision(x,y,targetX,targetY):
@@ -68,6 +68,9 @@ treasureY = 50
 font = pygame.font.SysFont("comicsans",70)
 level = 1
 
+enemyNames = {0:"Bob",1:"Will",2:"Smith",3:"Joe",4:"Jill"}
+
+enemyName = enemyNames[random.choice(list(enemyNames))]
 
 frame = pygame.time.Clock()
 collisionTreasure = False
@@ -84,18 +87,23 @@ while finished == False:
     elif enemyX <= 100 and enemymovingright == False:
         enemymovingright = True
 
+
     #R,G,B
-    #color = (0,0,255) #Blue
+    #color = (0,0,255) Blue
     #black = (0,0,0)
     screen.blit(backgroundImage,(0,0))
     screen.blit(treasureImage,(treasureX,treasureY))
     screen.blit(playerImage,(x,y))
     screen.blit(enemyImage,(enemyX,enemyY))
+    textEnemy = font.render(enemyName,True,(0,0,0))
+    screen.blit(textEnemy,(enemyX,enemyY-60))
+
     collisionEnemy = checkCollision(x,y,enemyX,enemyY)
     if playerMoved:
         collisionTreasure = checkCollision(x,y,treasureX,treasureY)
     if collisionTreasure:
         level += 1
+        enemyName = enemyNames[random.choice(list(enemyNames))]
         textWin = font.render("You reached Level " + str(level),True,(0,0,0))
         screen.blit(textWin,(450-textWin.get_width()/2,350-textWin.get_height()/2))
         pygame.display.flip()
@@ -109,6 +117,7 @@ while finished == False:
         pygame.display.flip()
         frame.tick(1)
         level = 1
+        enemyName = enemyNames[random.choice(list(enemyNames))]
         x = 450-35/2
         y = 650
         collisionEnemy = False
